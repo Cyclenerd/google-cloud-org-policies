@@ -1,0 +1,82 @@
+name: "Build"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '5 5 1,15 * *'
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  website:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    name: Website
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get install \
+            libjson-xs-perl    \
+            libtemplate-perl   \
+            jq
+
+      # https://github.com/marketplace/actions/checkout
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      # Configure Workload Identity Federation via a credentials file.
+      - id: auth
+        name: 🔐 Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: 'projects/147435552396/locations/global/workloadIdentityPools/github-com/providers/github-com-oidc'
+          service_account: 'gh-google-cloud-org-policies@gcloud-iam-382515.iam.gserviceaccount.com'
+          export_environment_variables: true
+      # Install gcloud, `setup-gcloud` automatically picks up authentication from `auth`.
+      # https://github.com/marketplace/actions/set-up-gcloud-cloud-sdk-environment
+      - name: '🔧 Set up Google Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v3'
+      # Now you can run gcloud commands authenticated as the impersonated service account.
+
+      - name: Get catalog
+        env:
+          # Parent resource for the Org Policy constraints.list call.
+          # Set the GCLOUD_ORGANIZATION, GCLOUD_FOLDER or GCLOUD_PROJECT repository variable.
+          GCLOUD_PROJECT: ${{ vars.GCLOUD_PROJECT }}
+        run: |
+          cd build || exit 9
+          python3 list_org_policies.py || exit 9
+
+      - name: Commit organization policy changes
+        run: |
+          cd build || exit 9
+          bash commit.sh || exit 9
+
+      - name: Build website
+        run: |
+          cd build || exit 9
+          perl build.pl || exit 9
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+      # https://github.com/marketplace/actions/upload-github-pages-artifact
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: 'web/'
+      # https://github.com/marketplace/actions/deploy-github-pages-site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

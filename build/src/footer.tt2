@@ -1,0 +1,24 @@
+</div> <!-- // container -->
+</main>
+<footer class="footer py-3 bg-light mt-2">
+<div class="container-fluid">
+<p class="text-muted">
+	Copyright [% USE date; date.format(date.now, '%Y'); %] <a href="https://www.nkn-it.de/">Nils Knieling</a>
+	·
+	All rights reserved
+</p>
+<p class="text-muted">
+	The accuracy of the data is not guaranteed. Please <a href="[% site.github.issues %]">report issues</a> you see.
+	Portions of this webapp are modifications based on work created and shared by <a href="https://developers.google.com/readme/policies">Google</a>
+	and used according to terms described in the <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons 4.0 Attribution License</a>.
+</p>
+<p class="text-muted small">
+	Last Update: <a href=[% IF gitHubRunId %]"[% gitHubServerUrl %]/[% gitHubRepository %]/actions/runs/[% gitHubRunId %]"[% ELSE %]"#"[% END %]>[% gmttime %]</a> (GMT)
+	·
+	<a href="https://www.nkn-it.de/imprint.html">Imprint</a>
+</p>
+</div> <!-- // container -->
+</footer>
+<script src="[% site.bootstrap.js %]"></script>
+</body>
+</html>

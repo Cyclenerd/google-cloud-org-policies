@@ -1,0 +1,100 @@
+[%- PROCESS header.tt2 -%]
+
+<h1>Organization Policy Constraints</h1>
+
+<blockquote class="blockquote">
+<p>
+There are <mark>[% policies.size %]</mark> available Google Cloud Organization Policy constraints.
+</p>
+</blockquote>
+
+<div id="table"></div>
+
+<div class="alert alert-info mt-3" role="alert">
+<strong>💡 Tip:</strong>
+Click a row to see the details.
+You can also filter the table using URL parameters.
+For example: <code>https://gcloud-org-policies.nkn-it.de/?id=compute&amp;name=serial&amp;desc=disable</code>
+</div>
+
+<!-- Constraint details modal -->
+<div class="modal fade" id="details" tabindex="-1" aria-labelledby="detailsLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-scrollable">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="detailsLabel">Constraint</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<dl class="row mb-0">
+					<dt class="col-sm-3">ID</dt>
+					<dd class="col-sm-9"><code id="detailsId"></code></dd>
+					<dt class="col-sm-3">Name</dt>
+					<dd class="col-sm-9" id="detailsName"></dd>
+					<dt class="col-sm-3">Description</dt>
+					<dd class="col-sm-9" id="detailsDesc"></dd>
+				</dl>
+			</div>
+			<div class="modal-footer">
+				<a id="detailsDocs" href="#" target="_blank" rel="noopener" class="btn btn-outline-primary">Documentation</a>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+function updateDetails(row) {
+	var data = row.getData();
+	document.getElementById("detailsLabel").textContent = data.name || data.id || "Constraint";
+	document.getElementById("detailsId").textContent = data.id || "";
+	document.getElementById("detailsName").textContent = data.name || "";
+	document.getElementById("detailsDesc").textContent = data.desc || "";
+	document.getElementById("detailsDocs").href =
+		"https://docs.cloud.google.com/organization-policy/reference/org-policy-constraints#constraints/" +
+		(data.id || "");
+}
+
+var table = new Tabulator("#table", {
+	ajaxURL:"[% site.json.policies %]",
+	height:"550px",
+	layout:"fitColumns",
+	headerFilterLiveFilterDelay:10,
+	columns:[
+		{title:"ID", field:"id", headerFilter:"input", headerFilterPlaceholder:"Filter constraint ID...", width: 420, responsive:0},
+		{title:"Name", field:"name", headerFilter:"input", width: 360},
+		{title:"Description", field:"desc", headerFilter:"input"}
+	],
+	initialSort:[
+		{column:"id", dir:"asc"}
+	]
+});
+table.on("rowClick", function(e, row){
+	updateDetails(row);
+	const detailsModal = new bootstrap.Modal('#details');
+	detailsModal.show();
+});
+table.on("tableBuilt", function(){
+	const urlParams = new URLSearchParams(window.location.search);
+	let hasFilters = false;
+
+	if (urlParams.has('id')) {
+		table.setHeaderFilterValue("id", urlParams.get('id'));
+		hasFilters = true;
+	}
+	if (urlParams.has('name')) {
+		table.setHeaderFilterValue("name", urlParams.get('name'));
+		hasFilters = true;
+	}
+	if (urlParams.has('desc')) {
+		table.setHeaderFilterValue("desc", urlParams.get('desc'));
+		hasFilters = true;
+	}
+
+	if (!hasFilters) {
+		table.setHeaderFilterFocus("id");
+	}
+});
+</script>
+
+[% PROCESS footer.tt2 %]

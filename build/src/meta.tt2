@@ -1,0 +1,19 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+[%- IF template.name == 'index.tt2' -%]
+<title>Organization Policy Constraints - Google Cloud Platform</title>
+<link rel="canonical" href="[% site.url %]/">
+
+[%- ELSIF template.name == '404.tt2'-%]
+<title>404 - Page Not Found</title>
+<meta name="robots" content="noindex, nofollow">
+
+[%- ELSE -%]
+<title>Google Cloud Organization Policies</title>
+
+[%- END -%]
+
+<link rel="stylesheet" href="[% site.bootstrap.css %]">
+<link rel="stylesheet" href="[% site.tabulator.css %]">
+<script src="[% site.tabulator.js %]"></script>
