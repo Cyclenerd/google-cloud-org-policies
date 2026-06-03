@@ -54,7 +54,7 @@ jobs:
         env:
           # Parent resource for the Org Policy constraints.list call.
           # Set the GCLOUD_ORGANIZATION, GCLOUD_FOLDER or GCLOUD_PROJECT repository variable.
-          GCLOUD_PROJECT: ${{ vars.GCLOUD_PROJECT }}
+          GCLOUD_PROJECT: gcloud-iam-382515
         run: |
           cd build || exit 9
           python3 list_org_policies.py || exit 9
