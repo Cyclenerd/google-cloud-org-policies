@@ -164,6 +164,7 @@
 "run.allowedBinaryAuthorizationPolicies"
 "run.allowedIngress"
 "run.allowedVPCEgress"
+"run.managed.disableInlinedSource"
 "run.managed.requireInvokerIam"
 "serviceuser.services"
 "spanner.assuredWorkloadsAdvancedServiceControls"
