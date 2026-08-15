@@ -106,6 +106,7 @@
 "container.managed.enableSecurityBulletinNotifications"
 "container.managed.enableShieldedNodes"
 "container.managed.enableWorkloadIdentityFederation"
+"container.managed.restrictControlPlaneEgress"
 "container.restrictNoncompliantDiagnosticDataAccess"
 "dataflow.managed.blockProjectSshKeys"
 "dataflow.managed.disableUsePublicIps"
