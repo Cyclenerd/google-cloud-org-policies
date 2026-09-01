@@ -118,6 +118,7 @@
 "essentialcontacts.allowedContactDomains"
 "essentialcontacts.disableProjectSecurityContacts"
 "essentialcontacts.managed.allowedContactDomains"
+"firestore.managed.disableEnhancedTextSearch"
 "firestore.managed.disableMongodbCompatibleDataAccessMode"
 "firestore.requireP4SAforImportExport"
 "gcp.detailedAuditLoggingMode"
