@@ -186,6 +186,7 @@
 "storage.secureHttpTransport"
 "storage.softDeletePolicySeconds"
 "storage.uniformBucketLevelAccess"
+"vertexai.allowOnlyAllCompliantAPIs"
 "vertexai.allowOnlyIL5CompliantAPIs"
 "vertexai.allowOnlyITARCompliantAPIs"
 "vertexai.allowedGenAIModels"
